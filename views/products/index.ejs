@@ -1,0 +1,112 @@
+<% layout('layouts/boilerplate') -%>
+
+<section class="container">
+  <!-- Beautiful Carousel Section -->
+  <div id="productCarousel" class="carousel slide carousel-fade mb-5" data-bs-ride="carousel" data-bs-interval="3000">
+    <!-- Indicators -->
+    <div class="carousel-indicators">
+      <% products.forEach((product, index) => { %>
+        <button type="button" data-bs-target="#productCarousel" data-bs-slide-to="<%= index %>" class="<%= index === 0 ? 'active' : '' %>" aria-current="<%= index === 0 ? 'true' : 'false' %>" aria-label="Slide <%= index + 1 %>"></button>
+      <% }) %>
+    </div>
+
+    <!-- Carousel Images -->
+    <div class="carousel-inner">
+      <% products.forEach((product, index) => { %>
+        <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+          <img src="<%= product.img %>" class="d-block mx-auto carousel-image rounded" alt="<%= product.name %>">
+          <div class="carousel-caption d-none d-md-block p-4 rounded caption-bg">
+            <h5 class="fw-bold"><%= product.name %></h5>
+            <p class="description-text mb-0"><%= product.desc %></p>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+
+    <!-- Carousel Controls -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+
+  <!-- Product Section -->
+  <section id="heading"> 
+    <h4 class="display-4"><i class="fab fa-shopify" style="margin-right: 20px;"></i>Shopping-Cart</h4>
+  </section>
+  
+  <div class="row products">
+    <% for(let product of products) { %>
+      <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card shadow-sm mx-auto position-relative" style="width: 20rem;">
+          <img src="<%= product.img %>" class="card-img-top rounded" alt="item image">
+          <span class="badge rounded-pill bg-light text-dark w-25 position-absolute translate-middle-y" style="top:41%;left:5%"><%= product.avgRating %> &star; | <%= product.reviews.length %></span>
+          <div class="card-body">
+            <h5 class="card-title d-flex justify-content-between align-items-center">
+              <span><%= product.name %></span> 
+              <span class="btn like-btn" product-id="<%= product._id %>">
+                <% if (currentUser && currentUser.wishList.includes(product._id)) { %>
+                  <i class="fas fa-heart"></i>
+                <% } else { %>
+                  <i class="far fa-heart"></i>
+                <% } %>
+              </span>
+            </h5>
+            <p class="card-text fw-light"><%= product.desc %></p>
+            <p class="text-muted"><%= product.reviews.length ? product.reviews.length + ' reviews' : 'No reviews' %></p>
+            <h6 class="card-title"><span class="fw-lighter fs-6 text-decoration-line-through">Rs.<%= product.price * 2 %></span> Rs.<%= product.price %> <span class="fw-light fs-6 text-warning">(50% OFF)</span></h6>
+            <a href="/products/<%= product._id %>" class="btn btn-sm show-btn">View Now</a>
+          </div>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<!-- Custom Styles for Carousel -->
+<style>
+  .carousel-image {
+    height: 400px;
+    width: 80%;
+    object-fit: cover;
+    border-radius: 15px;
+  }
+
+  /* Styling for the carousel caption */
+  .carousel-caption {
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+    color: #f8f9fa;
+    padding: 15px;
+    text-align: center;
+    max-width: 70%;
+    margin: 0 auto;
+  }
+
+  /* Bold title and smaller, styled description */
+  .carousel-caption h5 {
+    font-size: 1.5rem;
+    color: #ffcc00;
+  }
+
+  .description-text {
+    font-size: 1rem;
+    font-weight: 300;
+  }
+
+  .carousel-control-prev-icon,
+  .carousel-control-next-icon {
+    filter: invert(1);
+  }
+
+  /* Animation for smooth transitions */
+  .carousel-item {
+    transition: transform 0.6s ease, opacity 0.6s ease;
+  }
+</style>
+
+<script src="/js/common.js"></script>
